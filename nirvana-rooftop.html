@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Nirvana Rooftop Restro — Etawah</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600;700&family=Lato:wght@300;400&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --gold-pale: #f5e6b8;
+    --night: #050810;
+    --deep: #0a0f1e;
+    --mid: #111827;
+    --surface: #161d30;
+    --text: #e8dfc8;
+    --text-muted: #8a8070;
+    --white: #fff;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--night);
+    color: var(--text);
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ── STAR CANVAS ── */
+  #stars-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background .4s, backdrop-filter .4s, padding .4s;
+  }
+  nav.scrolled {
+    background: rgba(5,8,16,.88);
+    backdrop-filter: blur(18px);
+    padding: 14px 60px;
+    border-bottom: 1px solid rgba(201,168,76,.15);
+  }
+  .nav-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 1.15rem;
+    letter-spacing: .2em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .nav-logo span { color: var(--text); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-family: 'Lato', sans-serif;
+    font-size: .75rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color .3s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    font-family: 'Cinzel', serif;
+    font-size: .7rem;
+    letter-spacing: .15em;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 9px 22px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background .3s, color .3s;
+  }
+  .nav-cta:hover { background: var(--gold); color: var(--night); }
+
+  /* Hamburger */
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 200; }
+  .hamburger span { display: block; width: 26px; height: 2px; background: var(--gold); transition: .3s; }
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(5,8,16,.97);
+    z-index: 150;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: 'Cinzel', serif;
+    font-size: 1.5rem;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    transition: color .3s;
+  }
+  .mobile-menu a:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 24px;
+    overflow: hidden;
+    z-index: 1;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,168,76,.13) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse 6s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes pulse {
+    0%,100% { transform: translate(-50%,-50%) scale(1); opacity:.8; }
+    50%      { transform: translate(-50%,-50%) scale(1.15); opacity:1; }
+  }
+
+  .hero-eyebrow {
+    font-family: 'Lato', sans-serif;
+    font-size: .7rem;
+    letter-spacing: .35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp .9s .3s forwards;
+  }
+  .hero-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(2.8rem, 7vw, 6.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 10px;
+    opacity: 0;
+    animation: fadeUp .9s .5s forwards;
+  }
+  .hero-title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15em;
+  }
+  .hero-sub {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 2.5vw, 1.7rem);
+    color: var(--gold-pale);
+    letter-spacing: .08em;
+    margin-bottom: 50px;
+    opacity: 0;
+    animation: fadeUp .9s .7s forwards;
+  }
+  .hero-divider {
+    display: flex; align-items: center; gap: 18px;
+    margin-bottom: 50px;
+    opacity: 0;
+    animation: fadeUp .9s .85s forwards;
+  }
+  .hero-divider::before, .hero-divider::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    width: 120px;
+  }
+  .hero-divider-icon { color: var(--gold); font-size: 1rem; }
+
+  .hero-btns {
+    display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;
+    opacity: 0;
+    animation: fadeUp .9s 1s forwards;
+  }
+  .btn-primary {
+    font-family: 'Cinzel', serif;
+    font-size: .72rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    background: var(--gold);
+    color: var(--night);
+    padding: 15px 40px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background .3s, transform .2s;
+  }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .btn-outline {
+    font-family: 'Cinzel', serif;
+    font-size: .72rem;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    border: 1px solid rgba(201,168,76,.5);
+    color: var(--gold);
+    padding: 15px 40px;
+    text-decoration: none;
+    transition: border-color .3s, background .3s, transform .2s;
+  }
+  .btn-outline:hover { border-color: var(--gold); background: rgba(201,168,76,.08); transform: translateY(-2px); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 36px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    opacity: 0;
+    animation: fadeUp .9s 1.3s forwards;
+  }
+  .hero-scroll span {
+    font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; color: var(--text-muted);
+  }
+  .scroll-line {
+    width: 1px; height: 48px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+    animation: scrollAnim 2s ease-in-out infinite;
+  }
+  @keyframes scrollAnim {
+    0%,100% { opacity: 1; transform: scaleY(1) translateY(0); }
+    50% { opacity: .4; transform: scaleY(.6) translateY(6px); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(24px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+
+  /* ── SECTION COMMON ── */
+  section { position: relative; z-index: 1; }
+  .section-pad { padding: 110px 60px; }
+  .section-tag {
+    font-size: .65rem; letter-spacing: .4em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px; display: block;
+  }
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.8rem, 4vw, 3.2rem);
+    font-weight: 600; letter-spacing: .06em;
+    color: var(--white); line-height: 1.1;
+    margin-bottom: 24px;
+  }
+  .section-title em {
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--gold); font-weight: 300;
+  }
+  .gold-rule {
+    width: 60px; height: 1px;
+    background: var(--gold);
+    margin-bottom: 32px;
+  }
+  .body-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem; line-height: 1.85;
+    color: var(--text-muted); max-width: 580px;
+  }
+
+  /* ── ABOUT ── */
+  #about { background: var(--deep); }
+  .about-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+  }
+  .about-img-wrap {
+    position: relative;
+  }
+  .about-img-frame {
+    width: 100%; aspect-ratio: 4/5;
+    background: var(--surface);
+    position: relative; overflow: hidden;
+  }
+  .about-img-frame::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,.08) 0%, transparent 60%);
+  }
+  .about-img-inner {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 16px;
+  }
+  .about-img-icon { font-size: 4rem; opacity: .3; }
+  .about-img-label { font-family:'Cinzel',serif; font-size:.7rem; letter-spacing:.25em; color: var(--gold); opacity:.5; }
+  .about-deco-border {
+    position: absolute;
+    top: -14px; right: -14px; bottom: -14px; left: -14px;
+    border: 1px solid rgba(201,168,76,.2);
+    pointer-events: none;
+  }
+  .about-badge {
+    position: absolute;
+    bottom: -24px; right: -24px;
+    width: 110px; height: 110px;
+    background: var(--gold);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px;
+  }
+  .about-badge-num {
+    font-family: 'Cinzel', serif;
+    font-size: 2.2rem; font-weight: 700;
+    color: var(--night); line-height: 1;
+  }
+  .about-badge-txt {
+    font-size: .55rem; letter-spacing: .15em;
+    text-transform: uppercase; color: var(--night); opacity: .7;
+    text-align: center; padding: 0 8px;
+  }
+  .about-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    margin-top: 40px;
+    border: 1px solid rgba(201,168,76,.12);
+  }
+  .stat-box {
+    padding: 24px; background: var(--surface);
+    border: 1px solid rgba(201,168,76,.08);
+    text-align: center;
+  }
+  .stat-box:hover { background: rgba(201,168,76,.05); }
+  .stat-num {
+    font-family: 'Cinzel', serif;
+    font-size: 2rem; color: var(--gold);
+    font-weight: 600; line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: .65rem; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--text-muted);
+  }
+
+  /* ── SERVICES ── */
+  #services {
+    background: var(--night);
+    padding: 110px 60px;
+  }
+  .services-inner { max-width: 1200px; margin: 0 auto; }
+  .services-header { text-align: center; margin-bottom: 70px; }
+  .services-header .gold-rule { margin: 0 auto 32px; }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+  .service-card {
+    background: var(--surface);
+    padding: 46px 36px;
+    position: relative; overflow: hidden;
+    transition: transform .3s;
+    border: 1px solid rgba(201,168,76,.07);
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: var(--gold);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .4s ease;
+  }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-card:hover { transform: translateY(-4px); }
+  .service-icon {
+    font-size: 2.2rem; margin-bottom: 20px; display: block;
+  }
+  .service-name {
+    font-family: 'Cinzel', serif;
+    font-size: .9rem; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--white);
+    margin-bottom: 14px;
+  }
+  .service-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem; line-height: 1.7; color: var(--text-muted);
+  }
+  .service-chip {
+    display: inline-block;
+    margin-top: 18px;
+    font-size: .6rem; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--gold); border: 1px solid rgba(201,168,76,.35);
+    padding: 4px 12px;
+  }
+
+  /* ── AMENITIES ── */
+  #amenities { background: var(--deep); padding: 110px 60px; }
+  .amenities-inner { max-width: 1200px; margin: 0 auto; }
+  .amenities-header { margin-bottom: 60px; }
+  .amenity-strips { display: flex; flex-direction: column; gap: 2px; }
+  .amenity-row {
+    display: flex; align-items: center; gap: 28px;
+    background: var(--surface);
+    padding: 22px 36px;
+    border: 1px solid rgba(201,168,76,.07);
+    transition: background .3s;
+  }
+  .amenity-row:hover { background: rgba(201,168,76,.05); }
+  .amenity-icon { font-size: 1.5rem; width: 40px; text-align: center; flex-shrink: 0; }
+  .amenity-name {
+    font-family: 'Cinzel', serif;
+    font-size: .82rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--white); flex: 1;
+  }
+  .amenity-check {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: rgba(201,168,76,.15);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold); font-size: .75rem;
+  }
+
+  /* ── HOURS ── */
+  #hours {
+    background: var(--surface);
+    padding: 110px 60px;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  #hours::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(201,168,76,.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hours-inner { max-width: 700px; margin: 0 auto; position: relative; }
+  .hours-inner .gold-rule { margin: 0 auto 32px; }
+  .hours-badge {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: rgba(201,168,76,.12);
+    border: 1px solid rgba(201,168,76,.3);
+    padding: 16px 36px; margin: 40px 0 32px;
+  }
+  .hours-badge-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: #4ade80;
+    box-shadow: 0 0 10px #4ade80;
+    animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%,100% { opacity: 1; } 50% { opacity: .3; }
+  }
+  .hours-badge-text {
+    font-family: 'Cinzel', serif;
+    font-size: .9rem; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--gold);
+  }
+  .hours-note {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 1.1rem;
+    color: var(--text-muted); line-height: 1.8;
+  }
+
+  /* ── CONTACT ── */
+  #contact { background: var(--night); padding: 110px 60px; }
+  .contact-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+  }
+  .contact-info-block { display: flex; flex-direction: column; gap: 36px; }
+  .contact-item {
+    display: flex; align-items: flex-start; gap: 24px;
+    padding-bottom: 36px;
+    border-bottom: 1px solid rgba(201,168,76,.1);
+  }
+  .contact-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .contact-item-icon {
+    width: 48px; height: 48px; flex-shrink: 0;
+    border: 1px solid rgba(201,168,76,.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; color: var(--gold);
+  }
+  .contact-item-label {
+    font-size: .62rem; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 8px;
+  }
+  .contact-item-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem; color: var(--text); line-height: 1.6;
+  }
+  .contact-item-value a {
+    color: var(--gold); text-decoration: none;
+    transition: color .3s;
+  }
+  .contact-item-value a:hover { color: var(--gold-light); }
+
+  .contact-map-wrap {
+    background: var(--surface);
+    border: 1px solid rgba(201,168,76,.12);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 60px 40px; gap: 24px;
+    position: relative; overflow: hidden;
+    min-height: 360px;
+  }
+  .contact-map-wrap::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(201,168,76,.04) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(201,168,76,.04) 40px);
+  }
+  .map-icon { font-size: 3.5rem; opacity: .4; position: relative; }
+  .map-title {
+    font-family: 'Cinzel', serif;
+    font-size: .8rem; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--gold); position: relative;
+  }
+  .map-addr {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem; color: var(--text-muted); text-align: center;
+    line-height: 1.7; position: relative;
+  }
+  .map-btn {
+    font-family: 'Cinzel', serif;
+    font-size: .68rem; letter-spacing: .18em; text-transform: uppercase;
+    border: 1px solid var(--gold); color: var(--gold);
+    padding: 12px 28px; text-decoration: none;
+    transition: background .3s, color .3s;
+    position: relative;
+  }
+  .map-btn:hover { background: var(--gold); color: var(--night); }
+
+  /* ── SOCIAL CTA STRIP ── */
+  .cta-strip {
+    background: var(--gold);
+    padding: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 40px; flex-wrap: wrap;
+    position: relative; z-index: 1;
+  }
+  .cta-strip-text {
+    font-family: 'Cinzel', serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.8rem);
+    font-weight: 600; color: var(--night); letter-spacing: .06em;
+  }
+  .cta-strip-text em {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-weight: 300;
+  }
+  .cta-strip-btn {
+    font-family: 'Cinzel', serif;
+    font-size: .72rem; letter-spacing: .18em; text-transform: uppercase;
+    background: var(--night); color: var(--gold);
+    padding: 16px 40px; text-decoration: none; white-space: nowrap;
+    transition: background .3s;
+  }
+  .cta-strip-btn:hover { background: var(--deep); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--night);
+    border-top: 1px solid rgba(201,168,76,.1);
+    padding: 50px 60px 30px;
+    position: relative; z-index: 1;
+  }
+  .footer-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 24px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(201,168,76,.08);
+    margin-bottom: 24px;
+  }
+  .footer-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 1.2rem; letter-spacing: .2em;
+    color: var(--gold); text-transform: uppercase;
+  }
+  .footer-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: .95rem; color: var(--text-muted);
+  }
+  .footer-links { display: flex; gap: 28px; }
+  .footer-links a {
+    font-size: .65rem; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--text-muted); text-decoration: none;
+    transition: color .3s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-copy {
+    max-width: 1200px; margin: 0 auto;
+    font-size: .65rem; letter-spacing: .15em; text-transform: uppercase;
+    color: rgba(138,128,112,.4);
+    text-align: center;
+  }
+
+  /* ── FLOATING WA BUTTON ── */
+  .wa-float {
+    position: fixed; bottom: 32px; right: 32px; z-index: 200;
+    width: 58px; height: 58px; border-radius: 50%;
+    background: #25d366;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem; text-decoration: none; color: white;
+    box-shadow: 0 4px 24px rgba(37,211,102,.4);
+    transition: transform .3s, box-shadow .3s;
+    animation: waFloat 3s ease-in-out infinite;
+  }
+  .wa-float:hover { transform: scale(1.1); box-shadow: 0 6px 32px rgba(37,211,102,.5); }
+  @keyframes waFloat {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+  }
+
+  /* ── REVEAL ANIMATIONS ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity .8s ease, transform .8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: .1s; }
+  .reveal-delay-2 { transition-delay: .2s; }
+  .reveal-delay-3 { transition-delay: .3s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 18px 28px; }
+    nav.scrolled { padding: 14px 28px; }
+    .nav-links, .nav-cta { display: none; }
+    .hamburger { display: flex; }
+    .section-pad, #services, #amenities, #hours, #contact { padding: 80px 28px; }
+    .about-inner { grid-template-columns: 1fr; gap: 50px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .contact-inner { grid-template-columns: 1fr; gap: 50px; }
+    .cta-strip { flex-direction: column; text-align: center; padding: 50px 28px; }
+    footer { padding: 40px 28px 24px; }
+    .footer-inner { flex-direction: column; text-align: center; }
+    .footer-links { justify-content: center; }
+    .about-badge { width: 90px; height: 90px; bottom: -18px; right: -18px; }
+    .about-badge-num { font-size: 1.8rem; }
+  }
+  @media (max-width: 600px) {
+    .hero-title { font-size: 2.2rem; }
+    .hero-btns { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Stars canvas -->
+<canvas id="stars-canvas"></canvas>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMobile()">About</a>
+  <a href="#services" onclick="closeMobile()">Services</a>
+  <a href="#amenities" onclick="closeMobile()">Amenities</a>
+  <a href="#hours" onclick="closeMobile()">Hours</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- Navigation -->
+<nav id="navbar">
+  <div class="nav-logo">Nirvana <span>Rooftop</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#amenities">Amenities</a></li>
+    <li><a href="#hours">Hours</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="tel:+91937474XXXX" class="nav-cta">Reserve Now</a>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <p class="hero-eyebrow">✦ Etawah's Finest Rooftop Experience ✦</p>
+  <h1 class="hero-title">Nirvana<br/><em>Rooftop Restro</em></h1>
+  <p class="hero-sub">Where Every Meal Meets the Sky</p>
+  <div class="hero-divider">
+    <div class="hero-divider-icon">◈</div>
+  </div>
+  <div class="hero-btns">
+    <a href="#contact" class="btn-primary">Find Us</a>
+    <a href="#services" class="btn-outline">Explore Services</a>
+  </div>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="about-inner section-pad">
+    <div class="about-img-wrap reveal">
+      <div class="about-img-frame">
+        <div class="about-img-inner">
+          <div class="about-img-icon">🏨</div>
+          <div class="about-img-label">Nirvana Rooftop</div>
+        </div>
+      </div>
+      <div class="about-deco-border"></div>
+      <div class="about-badge">
+        <div class="about-badge-num">24</div>
+        <div class="about-badge-txt">Hours Open</div>
+      </div>
+    </div>
+    <div class="reveal reveal-delay-1">
+      <span class="section-tag">✦ Our Story</span>
+      <h2 class="section-title">A Rooftop Haven<br/>Above <em>Etawah</em></h2>
+      <div class="gold-rule"></div>
+      <p class="body-text">
+        Perched above the vibrant pulse of Etawah on National Highway 19, Nirvana Rooftop Restro is more than a destination — it's an elevation of the senses. We blend contemporary flavours with warm hospitality, offering an open-sky dining experience unlike any other in Uttar Pradesh.
+      </p>
+      <br/>
+      <p class="body-text">
+        Whether you arrive for a quiet morning meal or a midnight feast, our team is here around the clock — every day, every hour — to ensure your visit is nothing short of transcendent.
+      </p>
+      <div class="about-stats reveal reveal-delay-2">
+        <div class="stat-box">
+          <div class="stat-num">24/7</div>
+          <div class="stat-label">Always Open</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">NH19</div>
+          <div class="stat-label">Prime Location</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Sky Views</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Guest Comfort</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<section id="services">
+  <div class="services-inner">
+    <div class="services-header reveal">
+      <span class="section-tag">✦ What We Offer</span>
+      <h2 class="section-title">Our <em>Services</em></h2>
+      <div class="gold-rule"></div>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <span class="service-icon">🍽️</span>
+        <div class="service-name">Dine-In</div>
+        <div class="service-desc">Savour your meal under the open sky on our iconic rooftop terrace. A feast for the eyes as much as the palate.</div>
+        <div class="service-chip">Available Now</div>
+      </div>
+      <div class="service-card reveal reveal-delay-1">
+        <span class="service-icon">🚗</span>
+        <div class="service-name">Kerbside Pickup</div>
+        <div class="service-desc">Order ahead and collect your meal from the comfort of your vehicle — quick, seamless, and completely contactless.</div>
+        <div class="service-chip">Available Now</div>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <span class="service-icon">🛵</span>
+        <div class="service-name">Delivery</div>
+        <div class="service-desc">Bringing Nirvana to your doorstep. Enjoy our full menu delivered fresh with care and speed across Etawah.</div>
+        <div class="service-chip">Available Now</div>
+      </div>
+      <div class="service-card reveal">
+        <span class="service-icon">📦</span>
+        <div class="service-name">Takeaway</div>
+        <div class="service-desc">Perfect for those on the move. Pack your favourites and enjoy them wherever your journey takes you.</div>
+        <div class="service-chip">Available Now</div>
+      </div>
+      <div class="service-card reveal reveal-delay-1">
+        <span class="service-icon">🤝</span>
+        <div class="service-name">No-Contact Delivery</div>
+        <div class="service-desc">Your safety is our priority. We offer fully no-contact delivery options for peace of mind with every order.</div>
+        <div class="service-chip">Available Now</div>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <span class="service-icon">🚙</span>
+        <div class="service-name">Drive-Through</div>
+        <div class="service-desc">Roll up and roll on — our drive-through service keeps you fed and moving without missing a beat.</div>
+        <div class="service-chip">Available Now</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Amenities -->
+<section id="amenities">
+  <div class="amenities-inner">
+    <div class="amenities-header reveal">
+      <span class="section-tag">✦ Facilities</span>
+      <h2 class="section-title">Guest <em>Amenities</em></h2>
+      <div class="gold-rule"></div>
+    </div>
+    <div class="amenity-strips">
+      <div class="amenity-row reveal">
+        <div class="amenity-icon">🅿️</div>
+        <div class="amenity-name">Free Parking Lot</div>
+        <div class="amenity-check">✓</div>
+      </div>
+      <div class="amenity-row reveal reveal-delay-1">
+        <div class="amenity-icon">🚗</div>
+        <div class="amenity-name">Dedicated Parking Space</div>
+        <div class="amenity-check">✓</div>
+      </div>
+      <div class="amenity-row reveal reveal-delay-2">
+        <div class="amenity-icon">🛣️</div>
+        <div class="amenity-name">Free Street Parking</div>
+        <div class="amenity-check">✓</div>
+      </div>
+      <div class="amenity-row reveal">
+        <div class="amenity-icon">👨‍👩‍👧</div>
+        <div class="amenity-name">Family & Kid-Friendly Environment</div>
+        <div class="amenity-check">✓</div>
+      </div>
+      <div class="amenity-row reveal reveal-delay-1">
+        <div class="amenity-icon">👥</div>
+        <div class="amenity-name">Group Dining Available</div>
+        <div class="amenity-check">✓</div>
+      </div>
+      <div class="amenity-row reveal reveal-delay-2">
+        <div class="amenity-icon">🌙</div>
+        <div class="amenity-name">Open Around the Clock — 24 Hours</div>
+        <div class="amenity-check">✓</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Hours -->
+<section id="hours">
+  <div class="hours-inner">
+    <span class="section-tag reveal">✦ When to Visit</span>
+    <h2 class="section-title reveal">Always <em>Open</em> for You</h2>
+    <div class="gold-rule reveal" style="margin: 0 auto 0;"></div>
+    <div class="hours-badge reveal">
+      <div class="hours-badge-dot"></div>
+      <div class="hours-badge-text">Open 24 Hours — 7 Days a Week</div>
+    </div>
+    <p class="hours-note reveal">
+      Day or night, dawn or dusk — the rooftop is always ready.<br/>
+      Come for breakfast as the sun rises over Etawah, linger through lunch,<br/>
+      or indulge in a midnight supper beneath a canopy of stars.
+    </p>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="contact-info-block reveal">
+      <span class="section-tag">✦ Find Us</span>
+      <h2 class="section-title">Get in <em>Touch</em></h2>
+      <div class="gold-rule"></div>
+      <div class="contact-item">
+        <div class="contact-item-icon">📍</div>
+        <div>
+          <div class="contact-item-label">Address</div>
+          <div class="contact-item-value">National Highway 19,<br/>Etawah, Uttar Pradesh, India</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon">📞</div>
+        <div>
+          <div class="contact-item-label">Phone &amp; WhatsApp</div>
+          <div class="contact-item-value">
+            <a href="tel:+91937474XXXX">+91 9374 74XXXX</a><br/>
+            <a href="https://wa.me/91937474XXXX" target="_blank" style="font-size:.9rem;">💬 WhatsApp Us</a>
+          </div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon">🕐</div>
+        <div>
+          <div class="contact-item-label">Working Hours</div>
+          <div class="contact-item-value">Open 24 Hours, Every Day</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-item-icon">🌐</div>
+        <div>
+          <div class="contact-item-label">Highway</div>
+          <div class="contact-item-value">National Highway 19 — Easy Access<br/>from both directions</div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-map-wrap reveal reveal-delay-1">
+      <div class="map-icon">🗺️</div>
+      <div class="map-title">Our Location</div>
+      <div class="map-addr">
+        National Highway 19<br/>
+        Etawah, Uttar Pradesh<br/>
+        India
+      </div>
+      <a
+        href="https://www.google.com/maps/search/Nirvana+Rooftop+Restro+Etawah+NH19"
+        target="_blank"
+        class="map-btn"
+      >Open in Google Maps</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Strip -->
+<div class="cta-strip">
+  <div class="cta-strip-text">
+    Experience <em>Nirvana</em> — Book Your Table Today
+  </div>
+  <a href="tel:+91937474XXXX" class="cta-strip-btn">Call to Reserve</a>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">Nirvana Rooftop Restro</div>
+      <div class="footer-tagline">Where Every Meal Meets the Sky</div>
+    </div>
+    <div class="footer-links">
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#amenities">Amenities</a>
+      <a href="#hours">Hours</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+  <div class="footer-copy">
+    © 2025 Nirvana Rooftop Restro, Etawah, Uttar Pradesh &nbsp;·&nbsp; NH-19 &nbsp;·&nbsp; Open 24/7
+  </div>
+</footer>
+
+<!-- WhatsApp float button -->
+<a href="https://wa.me/91937474XXXX" target="_blank" class="wa-float" title="Chat on WhatsApp">💬</a>
+
+<script>
+  /* ─── STAR CANVAS ─── */
+  (function(){
+    const canvas = document.getElementById('stars-canvas');
+    const ctx = canvas.getContext('2d');
+    let stars = [], W, H;
+    function resize(){
+      W = canvas.width  = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    function mkStar(){
+      return {
+        x: Math.random()*W,
+        y: Math.random()*H,
+        r: Math.random()*.9+.1,
+        a: Math.random(),
+        da: (Math.random()*.004+.001) * (Math.random()<.5?1:-1),
+        vx: (Math.random()-.5)*.08,
+        vy: (Math.random()-.5)*.08,
+        gold: Math.random()<.06
+      };
+    }
+    function init(){
+      resize();
+      stars = Array.from({length:220}, mkStar);
+    }
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      stars.forEach(s=>{
+        s.a += s.da;
+        if(s.a>1||s.a<0) s.da *= -1;
+        s.x += s.vx; s.y += s.vy;
+        if(s.x<0) s.x=W; if(s.x>W) s.x=0;
+        if(s.y<0) s.y=H; if(s.y>H) s.y=0;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+        ctx.fillStyle = s.gold
+          ? `rgba(201,168,76,${s.a*.8})`
+          : `rgba(255,255,255,${s.a*.7})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    }
+    init();
+    draw();
+    window.addEventListener('resize', init);
+  })();
+
+  /* ─── NAV SCROLL ─── */
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', ()=>{
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  /* ─── MOBILE MENU ─── */
+  function toggleMenu(){
+    document.getElementById('mobileMenu').classList.toggle('open');
+  }
+  function closeMobile(){
+    document.getElementById('mobileMenu').classList.remove('open');
+  }
+
+  /* ─── REVEAL ON SCROLL ─── */
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        e.target.classList.add('visible');
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:.12});
+  reveals.forEach(r => obs.observe(r));
+</script>
+</body>
+</html>
